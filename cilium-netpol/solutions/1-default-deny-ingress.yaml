@@ -1,0 +1,9 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: default-deny-ingress
+  namespace: shop
+spec:
+  endpointSelector: {}      # every pod in the namespace
+  ingress:
+  - {}                      # an empty rule = select for ingress, allow nothing

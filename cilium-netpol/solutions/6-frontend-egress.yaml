@@ -1,0 +1,37 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: frontend-egress
+  namespace: shop
+spec:
+  endpointSelector:
+    matchLabels:
+      app: frontend
+  egress:
+  # DNS to kube-dns, with the DNS proxy rule that toFQDNs needs
+  - toEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: kube-system
+        k8s-app: kube-dns
+    toPorts:
+    - ports:
+      - port: "53"
+        protocol: ANY
+      rules:
+        dns:
+        - matchPattern: "*"
+  # backend API
+  - toEndpoints:
+    - matchLabels:
+        app: backend
+    toPorts:
+    - ports:
+      - port: "8080"
+        protocol: TCP
+  # one external FQDN
+  - toFQDNs:
+    - matchName: kubernetes.io
+    toPorts:
+    - ports:
+      - port: "443"
+        protocol: TCP

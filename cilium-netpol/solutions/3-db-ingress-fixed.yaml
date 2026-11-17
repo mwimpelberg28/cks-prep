@@ -1,0 +1,18 @@
+# Fix: label was "back-end" (should be "backend") and port was 6380 (should be 6379).
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: db-ingress
+  namespace: shop
+spec:
+  endpointSelector:
+    matchLabels:
+      app: db
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        app: backend
+    toPorts:
+    - ports:
+      - port: "6379"
+        protocol: TCP

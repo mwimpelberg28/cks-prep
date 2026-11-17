@@ -1,0 +1,18 @@
+# Pre-existing (broken) policy the candidate has to fix in Task 3.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: db-ingress
+  namespace: shop
+spec:
+  endpointSelector:
+    matchLabels:
+      app: db
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        app: back-end
+    toPorts:
+    - ports:
+      - port: "6380"
+        protocol: TCP
